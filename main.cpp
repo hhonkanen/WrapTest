@@ -228,7 +228,7 @@ int UnwrapKey_Case1(CK_SESSION_HANDLE session)
     int rv = 0;
     CK_OBJECT_HANDLE unwrappingKey = 0;
     CK_OBJECT_CLASS keyClass = CKO_SECRET_KEY;
-    CK_KEY_TYPE keyType= CKK_AES /* CKK_GENERIC_SECRET */; /* still some issues with GENERIC_SECRET type, so test with AES for now.*/
+    CK_KEY_TYPE keyType= CKK_GENERIC_SECRET;
     CK_ULONG attrCount = 8;
     CK_OBJECT_HANDLE unwrappedKey = 0;
     CK_BBOOL ckTrue = CK_TRUE;
@@ -329,7 +329,7 @@ int UnwrapKey_Case3(CK_SESSION_HANDLE session)
     CK_ATTRIBUTE keyTemplate[] = {
 	{CKA_CLASS, &keyClass, sizeof(keyClass)},
 	{CKA_KEY_TYPE, &keyType, sizeof(keyType)},
-	{CKA_TOKEN, &ckTrue, sizeof(ckFalse)},		/* CKA_TOKEN should actually be false. Testing with true for now. */
+	{CKA_TOKEN, &ckFalse, sizeof(ckFalse)},
 	{CKA_DERIVE, &ckFalse, sizeof(ckFalse)},
 	{CKA_SENSITIVE, &ckTrue, sizeof(ckTrue)},
 	{CKA_EXTRACTABLE, &ckTrue, sizeof(ckTrue)},
@@ -383,7 +383,7 @@ int UnwrapKey_Case4(CK_SESSION_HANDLE session)
     
    	CK_BYTE iv[0x10];
 	memset(&iv, 0, sizeof(iv));
-	CK_MECHANISM mech = { CKM_AES_CBC, &iv, sizeof(iv) };
+	CK_MECHANISM mech = { CKM_AES_CBC_PAD, &iv, sizeof(iv) };
 
 	rv = p11->C_UnwrapKey(session, &mech, unwrappingKey,
 		wrappedKey, ulWrappedKeyLen,keyTemplate, attrCount, &unwrappedKey);
@@ -424,12 +424,12 @@ int WrapKey(CK_SESSION_HANDLE session)
 
 	CK_BYTE iv[0x10];
 	memset(&iv, 0, sizeof(iv));
-	CK_MECHANISM mech = { CKM_AES_CBC, &iv, sizeof(iv) };
+	CK_MECHANISM mech = { CKM_AES_CBC_PAD, &iv, sizeof(iv) };
 
 	rv = p11->C_WrapKey(session, &mech, wrappingKey,
 		targetKey, wrappedData, &wrappedDataLen);
 
-	if (wrappedDataLen > 0)
+	if (rv == CKR_OK && wrappedDataLen > 0)
 	{
 		cout << "Wrapped data: ";
 		OutputHexString(wrappedData, wrappedDataLen);
@@ -476,11 +476,11 @@ int main(int argc, char** argv) {
    
     
     /* Unwrap and AES key */
-   //rv = UnwrapKey_Case3(session);
+   rv = UnwrapKey_Case3(session);
     
     
     /* Wrap the GENERIC SECRET key using the AES key */
-   //rv = WrapKey(session);
+   rv = WrapKey(session);
 
  cleanup:
 
