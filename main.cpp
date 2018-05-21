@@ -233,7 +233,7 @@ int UnwrapKey_Case1(CK_SESSION_HANDLE session)
     CK_OBJECT_HANDLE unwrappedKey = 0;
     CK_BBOOL ckTrue = CK_TRUE;
     CK_BBOOL ckFalse = CK_FALSE;
-    CK_ULONG targetValueLen = 256;
+    CK_ULONG targetValueLen = 32;
     CK_BYTE pData[1024];
     CK_ULONG dataLen = sizeof(pData);
 
@@ -323,7 +323,7 @@ int UnwrapKey_Case3(CK_SESSION_HANDLE session)
     CK_OBJECT_HANDLE unwrappedKey = 0;
     CK_BBOOL ckTrue = CK_TRUE;
     CK_BBOOL ckFalse = CK_FALSE;
-    CK_ULONG targetValueLen = 256;
+    CK_ULONG targetValueLen = 32;
     int rv;
 
     CK_ATTRIBUTE keyTemplate[] = {
@@ -368,7 +368,7 @@ int UnwrapKey_Case4(CK_SESSION_HANDLE session)
     CK_OBJECT_HANDLE unwrappedKey = 0;
     CK_BBOOL ckTrue = CK_TRUE;
     CK_BBOOL ckFalse = CK_FALSE;
-    CK_ULONG targetValueLen = 256;
+    CK_ULONG targetValueLen = 32;
     int rv;
 
     CK_ATTRIBUTE keyTemplate[] = {
